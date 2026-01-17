@@ -45,6 +45,18 @@ RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
+# Запускаем миграции
+RUN php artisan migrate
+
+## Запускаем тесты
+RUN php vendor/bin/pest
+
+## Повторных запуск миграций и наполнение бд тестовыми данными
+RUN php artisan migrate:fresh --seed
+
+## Генерируем доку для swagger
+RUN php artisan l5-swagger:generate
+
 # Expose порт 9000 для PHP-FPM
 EXPOSE 9000
 
